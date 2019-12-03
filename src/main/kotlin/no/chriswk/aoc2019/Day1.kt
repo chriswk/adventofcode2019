@@ -33,15 +33,9 @@ class Day1 {
     }
 
     fun findFuel2(weight: Int): Int {
-        var total = 0
-        var w = weight
-        do {
-            w = findFuel(w)
-            if (w > 0) {
-                total += w
-            }
-        } while (w > 0)
-        return total
+        return generateSequence(findFuel(weight)) { w ->
+            findFuel(w)
+        }.takeWhile { it > 0 }.sum()
     }
     fun findFuel(weight: Int): Int {
         return Math.floorDiv(weight, 3) - 2
