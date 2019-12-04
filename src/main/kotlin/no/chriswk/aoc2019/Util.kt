@@ -3,6 +3,7 @@ package no.chriswk.aoc2019
 import java.io.File
 import java.io.InputStream
 import java.nio.charset.Charset
+import kotlin.system.measureTimeMillis
 
 class Util {}
 val utf8 = Charset.forName("UTF-8")
@@ -17,4 +18,10 @@ fun String.fileToLines(): List<String> {
 fun String.fileToString(): String {
     val path = "/$this"
     return object {}.javaClass.getResource(path).readText().substringBeforeLast("\n")
+}
+
+fun report(f: () -> Int) {
+    var ans: Int? = null
+    val timeTaken = measureTimeMillis { ans = f() }
+    println("Answer [$ans] - took $timeTaken ms")
 }

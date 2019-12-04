@@ -8,9 +8,10 @@ class Day3 {
         fun main(args: Array<String>) {
             val d = Day3()
 
-            println(d.part1())
-            println(d.part2())
+            report { d.part1() }
+            report { d.part2() }
         }
+
         val centralPort = Point(0, 0)
     }
 
@@ -20,6 +21,7 @@ class Day3 {
         }
         return manhattanForClosest(routeCollides(routeA, routeB))
     }
+
     fun part2(): Int {
         val (routeA, routeB) = "day3.txt".toInputStream().lines().map {
             centralPort.route(it)
@@ -30,9 +32,11 @@ class Day3 {
     fun routeCollides(routeA: Route, routeB: Route): Set<Point> {
         return routeA.toSet().intersect(routeB.toSet())
     }
+
     fun closestToCentral(collisions: Set<Point>): Point {
         return collisions.minBy { it.manhattan(centralPort) }!!
     }
+
     fun manhattanForClosest(collisions: Set<Point>): Int {
         return closestToCentral(collisions).manhattan(centralPort)
     }
@@ -47,12 +51,15 @@ class Day3 {
         return 1 + route.indexOfFirst { it == point }
     }
 }
+
 data class Instruction(val d: Direction, val c: Int) {
-    constructor(code: String): this(Direction.valueOf(code.first().toUpperCase().toString()), code.drop(1).toInt())
+    constructor(code: String) : this(Direction.valueOf(code.first().toUpperCase().toString()), code.drop(1).toInt())
 }
+
 enum class Direction {
     U, D, L, R
 }
+
 data class Point(val x: Int, val y: Int) {
     fun manhattan(other: Point): Int {
         return abs(x - other.x) + abs(y - other.y)
@@ -68,7 +75,7 @@ data class Point(val x: Int, val y: Int) {
             } else {
                 acc.last()
             }
-            when(f) {
+            when (f) {
                 Direction.U -> acc + point.up(i).toList()
                 Direction.R -> acc + point.right(i).toList()
                 Direction.L -> acc + point.left(i).toList()
@@ -76,24 +83,28 @@ data class Point(val x: Int, val y: Int) {
             }
         }
     }
+
     fun right(count: Int): Sequence<Point> {
         return generateSequence(this) {
-            it.copy(x = it.x+1)
+            it.copy(x = it.x + 1)
         }.drop(1).take(count)
     }
+
     fun left(count: Int): Sequence<Point> {
         return generateSequence(this) {
-            it.copy(x = it.x-1)
+            it.copy(x = it.x - 1)
         }.drop(1).take(count)
     }
+
     fun up(count: Int): Sequence<Point> {
         return generateSequence(this) {
-            it.copy(y = it.y+1)
+            it.copy(y = it.y + 1)
         }.drop(1).take(count)
     }
+
     fun down(count: Int): Sequence<Point> {
         return generateSequence(this) {
-            it.copy(y = it.y-1)
+            it.copy(y = it.y - 1)
         }.drop(1).take(count)
     }
 }
