@@ -14,19 +14,13 @@ class Day1 {
     }
 
     fun part1(): Int {
-        return "day1.txt".toInputStream()
-            .readBytes()
-            .toString(Charset.forName("UTF-8"))
-            .split("\n")
+        return "day1.txt".fileToLines()
             .map { it.toInt() }
             .map { findFuel(it) }
             .sum()
     }
     fun part2(): Int {
-        return "day1.txt".toInputStream()
-            .readBytes()
-            .toString(Charset.forName("UTF-8"))
-            .split("\n")
+        return "day1.txt".fileToLines()
             .map { it.toInt() }
             .map { findFuel2(it) }
             .sum()

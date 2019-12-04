@@ -13,14 +13,14 @@ class Day2 {
     }
 
     fun part1(): Int {
-        val program = "day2.txt".toInputStream().readBytes().toString(Charset.forName("UTF-8"))
+        val program = "day2.txt".fileToString()
         val instructions = parseProgram(program)
         instructions[1] = 12
         instructions[2] = 2
         return runProgram(instructions)[0]
     }
     fun part2(): Int {
-        val program = "day2.txt".toInputStream().readBytes().toString(Charset.forName("UTF-8"))
+        val program = "day2.txt".fileToString()
         val instructions = parseProgram(program)
         (1..100).forEach { noun ->
             (1..100).forEach { verb ->

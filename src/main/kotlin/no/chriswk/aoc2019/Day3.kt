@@ -16,7 +16,7 @@ class Day3 {
     }
 
     fun part1(): Int {
-        val (routeA, routeB) = "day3.txt".toInputStream().lines().map {
+        val (routeA, routeB) = "day3.txt".fileToLines().map {
             centralPort.route(it)
         }
         return manhattanForClosest(routeCollides(routeA, routeB))
@@ -48,7 +48,9 @@ class Day3 {
         return 1 + route.indexOfFirst { it == point }
     }
 }
-data class Instruction(val d: Direction, val c: Int)
+data class Instruction(val d: Direction, val c: Int) {
+    constructor(code: String): this(Direction.valueOf(code.first().toUpperCase().toString()), code.drop(1).toInt())
+}
 enum class Direction {
     U, D, L, R
 }
@@ -59,15 +61,7 @@ data class Point(val x: Int, val y: Int) {
 
     fun route(s: String): Route {
         val route = s.split(",").asSequence().map {
-            val count = it.trim().drop(1).toInt()
-            val direction = when(it[0]) {
-                'R' -> Direction.R
-                'L' -> Direction.L
-                'U' -> Direction.U
-                'D' -> Direction.D
-                else -> Direction.U
-            }
-            Instruction(direction, count)
+            Instruction(it)
         }
         return route.fold(listOf()) { acc, (f, i) ->
             val point = if (acc.isEmpty()) {
