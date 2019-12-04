@@ -1,6 +1,5 @@
 package no.chriswk.aoc2019
 
-import java.nio.charset.Charset
 import kotlin.math.abs
 
 class Day3 {

@@ -1,7 +1,5 @@
 package no.chriswk.aoc2019
 
-import java.nio.charset.Charset
-
 class Day2 {
     companion object {
         @JvmStatic
