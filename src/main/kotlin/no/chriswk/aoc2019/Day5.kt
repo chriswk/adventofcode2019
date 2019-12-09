@@ -13,7 +13,7 @@ class Day5 {
     fun part1(): Int {
         val input = "day5.txt".fileToString()
         val computer = IntCodeComputer.parse(input)
-        val (memory, output) = computer.run(inputs = listOf(1))
+        val output = computer.run(inputs = listOf(1))
         return output.lastOrNull() ?: Int.MIN_VALUE
     }
 
