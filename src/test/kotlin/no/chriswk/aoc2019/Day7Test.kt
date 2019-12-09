@@ -10,4 +10,22 @@ class Day7Test {
         val day7 = Day7(parseInstructions("3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0"))
         assertThat(day7.part1()).isEqualTo(43210)
     }
+    @Test
+    fun `Max thruster expected to yield 54321`() {
+        val d2 = Day7(parseInstructions("3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26," +
+                "27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"))
+        assertThat(d2.part1()).isEqualTo(54321)
+    }
+    @Test
+    fun `Max thruster expected to be 65210`() {
+        val d3 = Day7(parseInstructions("3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26," +
+                "27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"))
+        assertThat(d3.part1()).isEqualTo(65210)
+    }
+
+    @Test
+    fun `amplified loop is read correctly`() {
+        val computer = Day7(parseInstructions("""3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"""))
+        assertThat(computer.part2()).isEqualTo(139629729)
+    }
 }

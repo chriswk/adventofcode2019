@@ -34,13 +34,11 @@ class IntCodeComputer(val program: IntArray, val input: Channel<Int>) {
             ip += dP
             relative += dRel
         } while (op.action != Action.QUIT)
-        println("Finished runSuspending")
     }
 
     fun run(): List<Int> = runBlocking {
         runSuspending()
         val output = output.toList()
-        println("Saw outputs")
         output
     }
 }
@@ -152,6 +150,7 @@ data class IntCodeOp(val action: Action, val param1Mode: Mode, val param2Mode: M
                 Action.ADJUST.instructionSize to newRelative
             }
             Action.QUIT -> {
+                output.close()
                 Action.QUIT.instructionSize to 0
             }
         }

@@ -11,8 +11,8 @@ class Day7(val program: IntArray) {
         @JvmStatic
         fun main(args: Array<String>) {
             val day7 = Day7(parseInstructions("day7.txt".fileToString()))
-            report { day7.part2() }
             report { day7.part1() }
+            report { day7.part2() }
         }
     }
 
@@ -32,10 +32,10 @@ class Day7(val program: IntArray) {
 
     suspend fun runAmplified(settings: List<Int>) = coroutineScope {
         val a = IntCodeComputer(program.copyOf(), listOf(settings[0], 0).toChannel())
-        val b = IntCodeComputer(program.copyOf() ,listOf(settings[1]).toChannel())
-        val c = IntCodeComputer(program.copyOf(), listOf(settings[2]).toChannel())
-        val d = IntCodeComputer(program.copyOf(), listOf(settings[3]).toChannel())
-        val e = IntCodeComputer(program.copyOf(), listOf(settings[4]).toChannel())
+        val b = IntCodeComputer(program.copyOf() ,a.output.andSend(settings[1]))
+        val c = IntCodeComputer(program.copyOf(), b.output.andSend(settings[2]))
+        val d = IntCodeComputer(program.copyOf(), c.output.andSend(settings[3]))
+        val e = IntCodeComputer(program.copyOf(), d.output.andSend(settings[4]))
         val channelSpy = ChannelSpy(e.output, a.input)
         coroutineScope {
             launch { channelSpy.listen() }
