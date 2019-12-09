@@ -5,22 +5,22 @@ class Day5 {
         @JvmStatic
         fun main(args: Array<String>) {
             val day5 = Day5()
-            day5.part1()
-            day5.part2()
+            report { day5.part1() }
+            report { day5.part2() }
         }
     }
 
-    fun part1() {
+    fun part1(): Int {
         val input = "day5.txt".fileToString()
         val computer = IntCodeComputer.parse(input)
         val (memory, output) = computer.run(inputs = listOf(1))
-        println(output)
+        return output.lastOrNull() ?: Int.MIN_VALUE
     }
 
-    fun part2() {
+    fun part2(): Int {
         val input = "day5.txt".fileToString()
         val computer = IntCodeComputer.parse(input)
         val (memory, output) = computer.run(inputs = listOf(5))
-        println(output)
+        return output.lastOrNull() ?: Int.MIN_VALUE
     }
 }
