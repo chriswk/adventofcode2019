@@ -13,81 +13,61 @@ class Day5Test {
         assertThat(op.param2Mode).isEqualTo(Mode.IMMEDIATE)
         assertThat(op.param3Mode).isEqualTo(Mode.POSITION)
     }
-    @Test
-    fun `runs single line`() {
-        val computer = IntCodeComputer.parse("1101,100,-1,4,0")
-        val (memory, outputs) = computer.run()
-        assertThat(memory[4]).isEqualTo(99)
-    }
-
-    @Test
-    fun `example from text`() {
-        val computer = IntCodeComputer.parse("1002,4,3,4,33")
-        val (memory, _) = computer.run()
-        assertThat(memory[4]).isEqualTo(99)
-    }
 
     @Test
     fun `is input equal to 8 - position mode`() {
-        val computer = IntCodeComputer.parse("3,9,8,9,10,9,4,9,99,-1,8")
-        val (memory1, equalTo8) = computer.run(inputs = listOf(8))
+        val computer = IntCodeComputer.prepare("3,9,8,9,10,9,4,9,99,-1,8", listOf(8))
+        val equalTo8 = computer.run()
         assertThat(equalTo8).containsExactly(1)
-        val (memory2, neqTo8) = computer.run(inputs = listOf(4))
+        val neqTo8 = IntCodeComputer.prepare("3,9,8,9,10,9,4,9,99,-1,8", listOf(4)).run()
         assertThat(neqTo8).containsExactly(0)
     }
 
     @Test
     fun `is input less than 8 - position mode`() {
-        val computer = IntCodeComputer.parse("3,9,7,9,10,9,4,9,99,-1,8")
-        val (memory1, equalTo8) = computer.run(inputs = listOf(8))
+        val equalTo8 = IntCodeComputer.prepare("3,9,7,9,10,9,4,9,99,-1,8", listOf(8)).run()
         assertThat(equalTo8).containsExactly(0)
-        val (memory2, neqTo8) = computer.run(inputs = listOf(4))
+        val neqTo8 = IntCodeComputer.prepare("3,9,7,9,10,9,4,9,99,-1,8", listOf(4)).run()
         assertThat(neqTo8).containsExactly(1)
     }
     @Test
     fun `is input equal to 8 - immediate mode`() {
-        val computer = IntCodeComputer.parse("3,3,1108,-1,8,3,4,3,99")
-        val (memory1, equalTo8) = computer.run(inputs = listOf(8))
+        val equalTo8 = IntCodeComputer.prepare("3,3,1108,-1,8,3,4,3,99", listOf(8)).run()
         assertThat(equalTo8).containsExactly(1)
-        val (memory2, neqTo8) = computer.run(inputs = listOf(4))
+        val neqTo8 = IntCodeComputer.prepare("3,3,1108,-1,8,3,4,3,99", listOf(4)).run()
         assertThat(neqTo8).containsExactly(0)
     }
 
     @Test
     fun `is input less than 8 - immediate mode`() {
-        val computer = IntCodeComputer.parse("3,3,1107,-1,8,3,4,3,99")
-        val (memory1, equalTo8) = computer.run(inputs = listOf(8))
+        val equalTo8 = IntCodeComputer.prepare("3,3,1107,-1,8,3,4,3,99", listOf(8)).run()
         assertThat(equalTo8).containsExactly(0)
-        val (memory2, neqTo8) = computer.run(inputs = listOf(4))
+        val neqTo8 = IntCodeComputer.prepare("3,3,1107,-1,8,3,4,3,99", listOf(4)).run()
         assertThat(neqTo8).containsExactly(1)
     }
 
     @Test
     fun `is input non-zero - position mode`() {
-        val computer = IntCodeComputer.parse("3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9")
-        val (memory1, equalTo8) = computer.run(inputs = listOf(8))
+        val equalTo8 = IntCodeComputer.prepare("3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9", listOf(8)).run()
         assertThat(equalTo8).containsExactly(1)
-        val (memory2, neqTo8) = computer.run(inputs = listOf(0))
+        val neqTo8 = IntCodeComputer.prepare("3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9", listOf(0)).run()
         assertThat(neqTo8).containsExactly(0)
     }
     @Test
     fun `is input non-zero - immediate mode`() {
-        val computer = IntCodeComputer.parse("3,3,1105,-1,9,1101,0,0,12,4,12,99,1")
-        val (memory1, equalTo8) = computer.run(inputs = listOf(8))
+        val equalTo8 = IntCodeComputer.prepare("3,3,1105,-1,9,1101,0,0,12,4,12,99,1", listOf(8)).run()
         assertThat(equalTo8).containsExactly(1)
-        val (memory2, neqTo8) = computer.run(inputs = listOf(0))
+        val neqTo8 = IntCodeComputer.prepare("3,3,1105,-1,9,1101,0,0,12,4,12,99,1", listOf(0)).run()
         assertThat(neqTo8).containsExactly(0)
     }
 
     @Test
     fun `larger example ternary`() {
-        val computer = IntCodeComputer.parse("""3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99""".trimIndent())
-        val (memory1, equalTo8) = computer.run(inputs = listOf(8))
+        val equalTo8 = IntCodeComputer.prepare("""3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99""", listOf(8)).run()
         assertThat(equalTo8).containsExactly(1000)
-        val (memory2, LT8) = computer.run(inputs = listOf(0))
+        val LT8 = IntCodeComputer.prepare("""3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99""", listOf(0)).run()
         assertThat(LT8).containsExactly(999)
-        val (memory3, GT8) = computer.run(inputs = listOf(16))
+        val GT8 = IntCodeComputer.prepare("""3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99""", listOf(16)).run()
         assertThat(GT8).containsExactly(1001)
-
     }
 }

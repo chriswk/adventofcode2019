@@ -34,6 +34,8 @@ fun <T> List<T>.permutations(): List<List<T>> {
     }
 }
 
+suspend fun <T> Channel<T>.andSend(msg: T) : Channel<T> = this.also { send(msg) }
+
 fun <T> List<T>.toChannel(capacity: Int = Channel.UNLIMITED): Channel<T> {
     return Channel<T>(capacity).also { this.forEach { e -> it.offer(e) }}
 }

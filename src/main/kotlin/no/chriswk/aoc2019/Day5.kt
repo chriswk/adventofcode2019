@@ -12,15 +12,15 @@ class Day5 {
 
     fun part1(): Int {
         val input = "day5.txt".fileToString()
-        val computer = IntCodeComputer.parse(input)
-        val output = computer.run(inputs = listOf(1))
+        val computer = IntCodeComputer.prepare(input, listOf(1))
+        val output = computer.run()
         return output.lastOrNull() ?: Int.MIN_VALUE
     }
 
     fun part2(): Int {
         val input = "day5.txt".fileToString()
-        val computer = IntCodeComputer.parse(input)
-        val (memory, output) = computer.run(inputs = listOf(5))
+        val computer = IntCodeComputer.prepare(input, listOf(5))
+        val output = computer.run()
         return output.lastOrNull() ?: Int.MIN_VALUE
     }
 }
