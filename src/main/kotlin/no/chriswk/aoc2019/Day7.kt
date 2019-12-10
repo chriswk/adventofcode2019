@@ -25,7 +25,7 @@ class Day7(val program: IntArray) {
 
     fun run(settings: List<Int>): Int {
         return (0..4).fold(0) { prev, id ->
-            val cpu = IntCodeComputer(program = program.copyOf(), inputs = mutableListOf(settings[id], prev))
+            val cpu = IntCodeComputer(program = program.copyOf(), input = mutableListOf(settings[id], prev))
             cpu.run().lastOrNull() ?: Int.MIN_VALUE
         }
     }

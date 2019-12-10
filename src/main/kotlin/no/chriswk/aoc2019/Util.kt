@@ -40,8 +40,8 @@ fun <T> List<T>.toChannel(capacity: Int = Channel.UNLIMITED): Channel<T> {
     return Channel<T>(capacity).also { this.forEach { e -> it.offer(e) }}
 }
 
-fun report(f: () -> Int) {
-    var ans: Int? = null
+fun report(f: () -> Number) {
+    var ans: Number? = null
     val timeTaken = measureTimeMillis { ans = f() }
     println("Answer [$ans] - took $timeTaken ms")
 }
@@ -49,3 +49,9 @@ fun report(f: () -> Int) {
 fun parseInstructions(instructions: String): IntArray {
     return instructions.split(",").map { it.toInt() }.toIntArray()
 }
+
+fun parseBigInstructions(instructions: String): LongArray {
+    return instructions.split(",").map { it.toLong() }.toLongArray()
+}
+fun IntArray.toMutableMap(): MutableMap<Long, Long> = this.withIndex().associate { it.index.toLong() to it.value.toLong() }.toMutableMap()
+fun LongArray.toMutableMap(): MutableMap<Long, Long> = this.withIndex().associate { it.index.toLong() to it.value }.toMutableMap()

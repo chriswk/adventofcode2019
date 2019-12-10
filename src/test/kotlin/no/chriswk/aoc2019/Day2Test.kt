@@ -20,8 +20,8 @@ class Day2Test {
     @MethodSource("smallPrograms")
     fun `runs programs as expected`(input: String, output: Array<Int>) {
         val day = Day2()
-        val instructions = day.runProgram(day.parseProgram(input))
-        assertThat(instructions).isEqualTo(output)
+        val result = day.runProgram(day.parseProgram(input))
+        assertThat(result).isEqualTo(output)
     }
 
     companion object {
