@@ -32,6 +32,14 @@ class Day10Test {
         assertThat(day10.visible(asteroids).max()).isEqualTo(expectedCount)
     }
 
+    @Test
+    fun `Finds expected target for shooting`() {
+        val day10 = Day10()
+        val asteroids = day10.parseInput(largeExample.lines())
+        val station = day10.findStation(asteroids)
+        assertThat(day10.shoot(station!!, asteroids).drop(199).first().part2).isEqualTo(802)
+    }
+
     companion object {
         @JvmStatic
         fun largerExamples(): Stream<Arguments> {
@@ -77,8 +85,10 @@ class Day10Test {
                 .....#.#..
             """.trimIndent(), 41
                 ),
-                Arguments.of(
-                    """
+                Arguments.of(largeExample, 210)
+            )
+        }
+        val largeExample = """
                 .#..##.###...#######
                 ##.############..##.
                 .#.######.########.#
@@ -99,9 +109,6 @@ class Day10Test {
                 .#.#.###########.###
                 #.#.#.#####.####.###
                 ###.##.####.##.#..##
-            """.trimIndent(), 210
-                )
-            )
-        }
+            """.trimIndent()
     }
 }
