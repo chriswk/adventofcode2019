@@ -6,7 +6,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class Day7(val program: IntArray) {
-
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
@@ -14,28 +13,31 @@ class Day7(val program: IntArray) {
             report { day7.part1() }
             report { day7.part2() }
         }
-    }
-
-    fun part1(): Int {
-        return listOf(0,1,2,3,4).permutations().map { run(settings = it) }.max() ?: Int.MIN_VALUE
-    }
-    fun part2(): Int = runBlocking {
-        listOf(5,6,7,8,9).permutations().map { runAmplified(it) }.max() ?: Int.MIN_VALUE
-    }
-
-    fun run(settings: List<Int>): Int {
-        return (0..4).fold(0) { prev, id ->
-            val cpu = IntCodeComputer(program = program.copyOf(), input = mutableListOf(settings[id], prev))
-            cpu.run().lastOrNull() ?: Int.MIN_VALUE
+        operator fun invoke(): Day7 {
+            return Day7(parseInstructions("day7.txt".fileToString()))
         }
     }
 
-    suspend fun runAmplified(settings: List<Int>) = coroutineScope {
-        val a = IntCodeComputer(program.copyOf(), listOf(settings[0], 0).toChannel())
-        val b = IntCodeComputer(program.copyOf() ,a.output.andSend(settings[1]))
-        val c = IntCodeComputer(program.copyOf(), b.output.andSend(settings[2]))
-        val d = IntCodeComputer(program.copyOf(), c.output.andSend(settings[3]))
-        val e = IntCodeComputer(program.copyOf(), d.output.andSend(settings[4]))
+    fun part1(): Long {
+        return listOf(0L,1L,2L,3L,4L).permutations().map { run(settings = it) }.max() ?: Long.MIN_VALUE
+    }
+    fun part2(): Long = runBlocking {
+        listOf(5L,6L,7L,8L,9L).permutations().map { runAmplified(it) }.max() ?: Long.MIN_VALUE
+    }
+
+    fun run(settings: List<Long>): Long {
+        return (0..4).fold(0L) { prev, id ->
+            val cpu = IntCodeComputer(program = program.copyOf().toMutableMap(), input = mutableListOf(settings[id], prev).toChannel())
+            cpu.run().lastOrNull() ?: Long.MIN_VALUE
+        }
+    }
+
+    suspend fun runAmplified(settings: List<Long>) = coroutineScope {
+        val a = IntCodeComputer(program.copyOf().toMutableMap(), listOf(settings[0], 0).toChannel())
+        val b = IntCodeComputer(program.copyOf().toMutableMap() ,a.output.andSend(settings[1]))
+        val c = IntCodeComputer(program.copyOf().toMutableMap(), b.output.andSend(settings[2]))
+        val d = IntCodeComputer(program.copyOf().toMutableMap(), c.output.andSend(settings[3]))
+        val e = IntCodeComputer(program.copyOf().toMutableMap(), d.output.andSend(settings[4]))
         val channelSpy = ChannelSpy(e.output, a.input)
         coroutineScope {
             launch { channelSpy.listen() }

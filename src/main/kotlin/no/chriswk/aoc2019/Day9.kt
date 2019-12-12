@@ -1,5 +1,6 @@
 package no.chriswk.aoc2019
 
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class Day9 {
@@ -14,18 +15,19 @@ class Day9 {
 
     fun part1(): Long = runBlocking {
         val program = parseInstructions("day9.txt".fileToString()).toMutableMap()
-        IntCodeComputerMemory(program).run {
+        IntCodeComputer(program).run {
             input.send(1)
-            runProgram()
+            runSuspending()
             output.receive()
         }
+
     }
 
     fun part2(): Long = runBlocking {
         val program = parseInstructions("day9.txt".fileToString()).toMutableMap()
-        IntCodeComputerMemory(program).run {
+        IntCodeComputer(program).run {
             input.send(2)
-            runProgram()
+            runSuspending()
             output.receive()
         }
     }

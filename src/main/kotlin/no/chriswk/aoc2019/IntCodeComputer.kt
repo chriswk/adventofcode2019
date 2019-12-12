@@ -4,32 +4,34 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
 
-class IntCodeComputer(private val program: IntArray, val input: Channel<Int>) {
-    val output: Channel<Int> = Channel(Channel.UNLIMITED)
+class IntCodeComputer(val program: MutableMap<Long, Long>,
+                      val input: Channel<Long> = Channel(Channel.UNLIMITED), val output: Channel<Long> = Channel(Channel.UNLIMITED)) {
     companion object {
-        operator fun invoke(program: String, input : MutableList<Int> = mutableListOf()) = runBlocking {
-            IntCodeComputer(parseInstructions(program), input.toChannel())
+        operator fun invoke(program: IntArray) = runBlocking {
+            IntCodeComputer(program.toMutableMap())
         }
-        operator fun invoke(program: IntArray, singleInput: Int) = runBlocking {
-            IntCodeComputer(program, mutableListOf(singleInput).toChannel())
+        operator fun invoke(program: String, input : MutableList<Long> = mutableListOf()) = runBlocking {
+            IntCodeComputer(parseInstructions(program).toMutableMap(), input.toChannel())
         }
 
-        operator fun invoke(program: IntArray, input: MutableList<Int> = mutableListOf()) = runBlocking {
-            IntCodeComputer(program, input.toChannel())
+        operator fun invoke(program: IntArray, input: MutableList<Long> = mutableListOf()) = runBlocking {
+            IntCodeComputer(program.toMutableMap(), input.toChannel())
         }
     }
 
-    fun run(): List<Int> = runBlocking {
+    fun run(): List<Long> = runBlocking {
         runSuspending()
         output.toList()
     }
 
     suspend fun runSuspending() {
-        var instructionPointer = 0
-
+        var instructionPointer = 0L
+        var relative = 0L
         do {
             val nextOp = IntCodeInstruction(instructionPointer, program)
-            instructionPointer += nextOp.execute(instructionPointer, program, input, output)
+            val (newIp, newRel) = nextOp.execute(instructionPointer, program, input, output, relative)
+            instructionPointer = newIp
+            relative = newRel
         } while (nextOp !is IntCodeInstruction.Halt)
 
         output.close()

@@ -1,5 +1,7 @@
 package no.chriswk.aoc2019
 
+import java.lang.IllegalStateException
+
 class Day2 {
     companion object {
         @JvmStatic
@@ -10,48 +12,31 @@ class Day2 {
         }
     }
 
-    fun part1(): Int {
+    fun part1(): Long {
         val program = "day2.txt".fileToString()
-        val instructions = parseProgram(program)
+        val instructions = parseInstructions(program)
         instructions[1] = 12
         instructions[2] = 2
-        return runProgram(instructions)[0]
+        val computer = IntCodeComputer(instructions)
+        computer.run()
+        return computer.program[0] ?: throw IllegalStateException("No memory in position 0")
     }
 
     fun part2(): Int {
         val program = "day2.txt".fileToString()
-        val instructions = parseProgram(program)
+        val instructions = parseInstructions(program)
         (1..100).forEach { noun ->
             (1..100).forEach { verb ->
                 val copy = instructions.copyOf()
                 copy[1] = noun
                 copy[2] = verb
-                if (runProgram(copy)[0] == 19690720) {
+                val p = IntCodeComputer(copy)
+                p.run()
+                if (p.program[0] == 19690720L) {
                     return 100 * noun + verb
                 }
             }
         }
         return -1
     }
-
-
-    fun parseProgram(program: String): Array<Int> {
-        return program.split(",").map { it.toInt() }.toTypedArray()
-    }
-
-    fun runProgram(program: Array<Int>): Array<Int> {
-        val instructions = program.copyOf()
-        var currentPos = 0
-        while (instructions[currentPos] != 99) {
-            when (instructions[currentPos]) {
-                1 -> instructions[instructions[currentPos + 3]] =
-                    instructions[instructions[currentPos + 1]] + instructions[instructions[currentPos + 2]]
-                2 -> instructions[instructions[currentPos + 3]] =
-                    instructions[instructions[currentPos + 1]] * instructions[instructions[currentPos + 2]]
-            }
-            currentPos += 4
-        }
-        return instructions
-    }
-
 }

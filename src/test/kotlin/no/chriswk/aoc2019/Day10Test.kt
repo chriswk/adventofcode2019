@@ -37,7 +37,7 @@ class Day10Test {
         val day10 = Day10()
         val asteroids = day10.parseInput(largeExample.lines())
         val station = day10.findStation(asteroids)
-        assertThat(day10.shoot(station!!, asteroids).drop(199).first().part2).isEqualTo(802)
+        assertThat(day10.shoot(station!!, asteroids).drop(199).first().part2()).isEqualTo(802)
     }
 
     companion object {

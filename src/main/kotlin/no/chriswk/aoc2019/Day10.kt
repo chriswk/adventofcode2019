@@ -14,9 +14,9 @@ class Day10 {
         }
     }
 
-    fun parseInput(input: List<String>): List<Asteroid> {
+    fun parseInput(input: List<String>): List<Point> {
         return input.withIndex()
-            .flatMap { (y, row) -> row.withIndex().filter { it.value == '#' }.map { Asteroid(it.index, y) } }
+            .flatMap { (y, row) -> row.withIndex().filter { it.value == '#' }.map { Point(it.index, y) } }
     }
 
     fun part1(): Int {
@@ -31,12 +31,11 @@ class Day10 {
         val station = findStation(asteroids)!!
         val other = (asteroids - station)
         val twohundrethTarget = shoot(station, other).drop(199).first()
-        return twohundrethTarget.part2
+        return twohundrethTarget.part2()
     }
 
-
-    fun shoot(station: Asteroid, other: List<Asteroid>): Sequence<Asteroid> {
-        var remaining = other.toMutableList()
+    fun shoot(station: Point, other: List<Point>): Sequence<Point> {
+        val remaining = other.toMutableList()
         var angle = -PI / 2
         var firstTarget = true
         return generateSequence {
@@ -54,29 +53,24 @@ class Day10 {
         }
     }
 
-    fun findStation(asteroids: List<Asteroid>): Asteroid? {
-        return asteroids.maxBy { asteroid ->
-            asteroids.filter { it != asteroid }
+    fun findStation(points: List<Point>): Point? {
+        return points.maxBy { asteroid ->
+            points.filter { it != asteroid }
                 .map { atan2(it.dy(asteroid).toDouble(), it.dx(asteroid).toDouble()) }
                 .distinct()
                 .count()
         }
     }
 
-    fun visible(asteroids: List<Asteroid>): List<Int> {
-        return asteroids.map { asteroid ->
-            asteroids.filter { it != asteroid }
+    fun visible(points: List<Point>): List<Int> {
+        return points.map { asteroid ->
+            points.filter { it != asteroid }
                 .map { atan2(it.dy(asteroid).toDouble(), it.dx(asteroid).toDouble()) }
                 .distinct()
                 .count()
         }
     }
-
-    data class Asteroid(val x: Int, val y: Int) {
-        fun dx(other: Asteroid): Int = x - other.x
-        fun dy(other: Asteroid): Int = y - other.y
-        val part2 = x*100 + y
-    }
-
 }
+fun Point.part2() = this.x * 100 + this.y
+
 

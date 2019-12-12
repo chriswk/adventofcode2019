@@ -4,6 +4,7 @@ import kotlinx.coroutines.channels.Channel
 import java.io.File
 import java.io.InputStream
 import java.nio.charset.Charset
+import kotlin.math.abs
 import kotlin.system.measureTimeMillis
 
 class Util {}
@@ -53,5 +54,25 @@ fun parseInstructions(instructions: String): IntArray {
 fun parseBigInstructions(instructions: String): LongArray {
     return instructions.split(",").map { it.toLong() }.toLongArray()
 }
+tailrec fun gcd(a: Int, b: Int): Int = if(a == 0) abs(b) else gcd(b % a, a)
+tailrec fun gcd(a: Long, b: Long): Long = if(a == 0L) abs(b) else gcd(b % a, a)
 fun IntArray.toMutableMap(): MutableMap<Long, Long> = this.withIndex().associate { it.index.toLong() to it.value.toLong() }.toMutableMap()
 fun LongArray.toMutableMap(): MutableMap<Long, Long> = this.withIndex().associate { it.index.toLong() to it.value }.toMutableMap()
+fun <T> Iterable<T>.combinations(length: Int): Sequence<List<T>> =
+    sequence {
+        @Suppress("UNCHECKED_CAST")
+        val pool = this as? List<T> ?: toList()
+        val n = pool.size
+        if(length > n) return@sequence
+        val indices = IntArray(length) { it }
+        while(true) {
+            yield(indices.map { pool[it] })
+            var i = length
+            do {
+                i--
+                if(i == -1) return@sequence
+            } while(indices[i] == i + n - length)
+            indices[i]++
+            for(j in i+1 until length) indices[j] = indices[j - 1] + 1
+        }
+    }

@@ -10,17 +10,17 @@ class Day5 {
         }
     }
 
-    fun part1(): Int {
+    fun part1(): Long {
         val program = parseInstructions("day5.txt".fileToString())
-        val computer = IntCodeComputer(program, input = mutableListOf(1))
+        val computer = IntCodeComputer(program.toMutableMap(), input = mutableListOf(1L).toChannel())
         val output = computer.run()
-        return output.lastOrNull() ?: Int.MIN_VALUE
+        return output.lastOrNull() ?: Long.MIN_VALUE
     }
 
-    fun part2(): Int {
+    fun part2(): Long {
         val program = parseInstructions("day5.txt".fileToString())
-        val computer = IntCodeComputer(program, input = mutableListOf(5))
+        val computer = IntCodeComputer(program.toMutableMap(), input = mutableListOf(5L).toChannel())
         val output = computer.run()
-        return output.lastOrNull() ?: Int.MIN_VALUE
+        return output.lastOrNull() ?: Long.MIN_VALUE
     }
 }
