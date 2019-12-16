@@ -1,7 +1,10 @@
 package no.chriswk.aoc2019
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class IntCodeComputer(val program: MutableMap<Long, Long>,
@@ -18,7 +21,14 @@ class IntCodeComputer(val program: MutableMap<Long, Long>,
             IntCodeComputer(program.toMutableMap(), input.toChannel())
         }
     }
-
+    fun launch(): Job = GlobalScope.launch {
+        try {
+            runSuspending()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
     fun run(): List<Long> = runBlocking {
         runSuspending()
         output.toList()
