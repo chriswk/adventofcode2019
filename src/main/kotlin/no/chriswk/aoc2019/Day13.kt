@@ -41,16 +41,9 @@ class Day13 {
                     tiles[p] = t
                     if (p != Point(-1, 0)) {
                         when (t) {
-                            4L -> {
-                                val joyStickOrder = p.x.compareTo(paddleX).toLong()
-                                input.send(joyStickOrder)
-                            }
-                            3L -> {
-                                paddleX = p.x
-                            }
-                            else -> {
-
-                            }
+                            4L -> input.send(p.x.compareTo(paddleX).toLong())
+                            3L -> paddleX = p.x
+                            else -> {}
                         }
                     }
                 } catch (e: Exception) {
