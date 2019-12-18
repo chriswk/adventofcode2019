@@ -1,7 +1,25 @@
 package no.chriswk.aoc2019
 
 import kotlin.math.abs
-
+enum class Direction {
+    U, D, L, R;
+    fun cmd(): Long {
+        return when(this) {
+            U -> 1L
+            D -> 2L
+            L -> 3L
+            R -> 4L
+        }
+    }
+    fun back(): Long {
+        return when(this) {
+            U -> D.cmd()
+            D -> L.cmd()
+            L -> R.cmd()
+            R -> L.cmd()
+        }
+    }
+}
 data class Point(val x: Int, val y: Int) {
     fun manhattan(other: Point): Int {
         return abs(x - other.x) + abs(y - other.y)
@@ -23,6 +41,18 @@ data class Point(val x: Int, val y: Int) {
                 Direction.L -> acc + point.left(i).toList()
                 Direction.D -> acc + point.down(i).toList()
             }
+        }
+    }
+
+    fun cardinalNeighbours(): List<Pair<Point, Direction>> {
+        return Direction.values().map { this.move(it) to it }
+    }
+    fun move(d: Direction): Point {
+        return when(d) {
+            Direction.U -> this.up()
+            Direction.D -> this.down()
+            Direction.L -> this.left()
+            Direction.R -> this.right()
         }
     }
 

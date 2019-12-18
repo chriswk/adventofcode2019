@@ -56,8 +56,6 @@ data class Instruction(val d: Direction, val c: Int) {
     constructor(code: String) : this(Direction.valueOf(code.first().toUpperCase().toString()), code.drop(1).toInt())
 }
 
-enum class Direction {
-    U, D, L, R
-}
+
 
 typealias Route = List<Point>
