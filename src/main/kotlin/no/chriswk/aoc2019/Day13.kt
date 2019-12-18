@@ -19,7 +19,7 @@ class Day13 {
     fun part1(): Int {
         val instructions = parseBigInstructions("day13.txt".fileToString())
         val output = IntCodeComputer(instructions.toMutableMap()).run()
-        return output.chunked(3).count { (a, b, c) -> c == 2L }
+        return output.chunked(3).count { (_, _, c) -> c == 2L }
     }
 
     fun part2(): Long = runBlocking {
