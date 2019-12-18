@@ -14,7 +14,7 @@ enum class Direction {
     fun back(): Long {
         return when(this) {
             U -> D.cmd()
-            D -> L.cmd()
+            D -> U.cmd()
             L -> R.cmd()
             R -> L.cmd()
         }

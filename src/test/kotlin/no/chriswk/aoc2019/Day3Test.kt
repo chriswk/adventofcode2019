@@ -35,7 +35,6 @@ class Day3Test {
         assertThat(intersections).isNotEmpty
         assertThat(intersections).containsExactly(Point(5, 3))
     }
-
     @Test
     fun `Finds intersection closest to central port`() {
         val origo = Point(0, 0)
