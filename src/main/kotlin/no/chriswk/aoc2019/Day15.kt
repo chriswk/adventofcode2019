@@ -8,28 +8,48 @@ class Day15 {
         @JvmStatic
         fun main(args: Array<String>) {
             val day15 = Day15()
-            report { day15.part1() }
+            val program = parseBigInstructions("day15.txt".fileToString()).toMutableMap()
+            report { day15.part1(program) }
+            report { day15.part2(program) }
         }
     }
 
-    fun part1(): Int {
+    fun part1(program: MutableMap<Long, Long>): Int {
         val (gridLimits, points) = runBlocking {
             buildGrid(
-                IntCodeComputer(parseBigInstructions("day15.txt".fileToString()).toMutableMap()),
+                IntCodeComputer(program),
                 Point.ORIGIN
             )
         }
-        println(gridLimits.print(points))
         val oxygenAt = points.entries.first { it.value == 2L }.key
         val paths = pathsFromTo(src = oxygenAt, dest = Point.ORIGIN, points = points)
         return paths.map { it.size }.min() ?: -1
+    }
+    fun part2(program: MutableMap<Long, Long>): Int {
+        val (gridLimits, points) = runBlocking {
+            buildGrid(IntCodeComputer(program), Point.ORIGIN)
+        }
+        val oxygenAt = points.entries.first { it.value == 2L }.key
+        val distances = mutableMapOf<Point, Int>()
+        distancesFrom(oxygenAt, points.filterNot { it.value == 0L }, distances)
+        return distances.values.max()!!
+    }
+    fun distancesFrom(current: Point, grid: Map<Point, Long>, distances: MutableMap<Point, Int>, distance: Int = 0) {
+        if (!grid.containsKey(current)) { return }
+        val curMin = distances[current] ?: (distance + 1)
+        if (distance < curMin) {
+            distances[current] = distance
+            current.cardinalNeighbours().forEach { (n, d) ->
+                distancesFrom(n, grid, distances, distance + 1)
+            }
+        }
     }
 
 
     fun pathsFromTo(
         src: Point,
         dest: Point,
-        visited: List<Point> = listOf(src),
+        visited: List<Point> = listOf(),
         points: Map<Point, Long>
     ): List<List<Point>> {
         return if (src == dest) {
@@ -50,21 +70,15 @@ class Day15 {
     }
 
     suspend fun track(point: Point, seen: MutableMap<Point, Long>, vm: IntCodeComputer) {
-        point.cardinalNeighbours().forEach { (p, dir) ->
-            if (!seen.containsKey(p)) {
-                val block = move(vm, dir.cmd())
-                seen[p] = block
-                when (block) {
-                    0L -> {
-                    }
-                    1L -> {
-                        track(p, seen, vm)
-                        move(vm, dir.back())
-                    }
-                    2L -> {
-                        println("Found the oxygen at $p")
-                    }
-                    else -> throw IllegalStateException("Got unexpected output from vm")
+        point.cardinalNeighbours().filterNot { seen.containsKey(it.first) }.forEach { (p, dir) ->
+            val block = move(vm, dir.cmd())
+            seen[p] = block
+            when (block) {
+                0L -> {
+                }
+                else -> {
+                    track(p, seen, vm)
+                    move(vm, dir.back())
                 }
             }
         }
